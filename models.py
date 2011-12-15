@@ -12,7 +12,7 @@ accounts = db.Table('accounts',
 
 class User(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
-	family_id = db.Column(db.Integer,db.ForeignKey('family.id'))
+	#family_id = db.Column(db.Integer,db.ForeignKey('family.id'))
 	name = db.Column(db.String(80),unique=True)
 	password = db.Column(db.String(32))
 	email = db.Column(db.String(80),unique=True)
@@ -33,8 +33,8 @@ class User(db.Model):
 class Family(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
 	name = db.Column(db.String(80))
-	users = db.relationship('User',
-			backref=db.backref('user'),primaryjoin=id==User.family_id)
+	# users = db.relationship('User',
+	#		backref=db.backref('user'),primaryjoin=id==User.family_id)
 
 	def __init__(self,name):
 		self.name = name
@@ -71,11 +71,11 @@ class Account(db.Model):
 def test():
 	db.drop_all()
 	db.create_all()
-	family = Family('vyas')
+	#family = Family('vyas')
 	usr1 = User('pratik','pdvyas@gmail.com','secret')
 	usr2= User('Neelima','neelu@gmail.com','secret2')
-	family.users.append(usr1)
-	family.users.append(usr2)
+	#family.users.append(usr1)
+	#family.users.append(usr2)
 	ac1 = Account(810)
 	ac2 = Account(940)
 	usr1.accounts.append(ac2)
