@@ -1,0 +1,3 @@
+[submodule "banks"]
+	path = banks
+	url = git@github.com:pdvyas/banks-api.git
