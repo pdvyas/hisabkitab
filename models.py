@@ -11,8 +11,8 @@ accounts = db.Table('accounts',
 				)
 
 class User(db.Model):
-	id = db.Column(db.Integer,primary_key=True)
 	#family_id = db.Column(db.Integer,db.ForeignKey('family.id'))
+	id = db.Column(db.Integer,primary_key=True)
 	name = db.Column(db.String(80),unique=True)
 	password = db.Column(db.String(32))
 	email = db.Column(db.String(80),unique=True)
@@ -29,6 +29,13 @@ class User(db.Model):
 		pwhash = hashlib.md5(password).hexdigest()
 		usr = User.query.filter_by(name=name,password=pwhash).first()
 		return usr
+
+	@staticmethod
+	def exists(name):
+		if User.query.filter_by(name=name).first():
+			return True
+		else:
+			return False
 
 class Family(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
@@ -58,15 +65,24 @@ class Transaction(db.Model):
 		self.date = date
 		self.amount = amount
 		self.t_type = t_type
+
 class Account(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
+	id = db.Column(db.String, primary_key=True)
 	no = db.Column(db.String)
+	bank = db.Column(db.String)
 	bal = db.Column(db.Float)
 	_last_txn = db.Column(db.String(32))
 	transactions = db.relationship('Transaction',
 			backref=db.backref('Transaction'),primaryjoin=id==Transaction.ac_id)
-	def __init__(self,no):
+	def __init__(self,ac_no,bank,id,balance):
+		self.id = id
+		self.bal = balance
 		self.no = no
+		self.bank = bank
+
+	@staticmethod
+	def get_by_id(ac_id):
+		return Account.query.get(ac_id)
 
 def test():
 	db.drop_all()
