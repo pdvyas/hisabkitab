@@ -35,13 +35,16 @@ def login():
 
 @app.route('/logout')
 def logout():
-	if hasattr(session,'user'):
+	try:
 		del session['user']
+	except KeyError:
+		pass
 	return "Logged out"
 
 @app.route('/test')
 def test():
-	if hasattr(session,'user'):
-		return session['user'].name
-	else:
+	try:
+		uname = session['user'].name
+		return uname
+	except KeyError,e:
 		return "Not Logged in"
