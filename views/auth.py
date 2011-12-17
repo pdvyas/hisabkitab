@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 import models
 @app.route("/")
 def hello():
+	raise Exception
 	return jsonify({ 'a': 'Hello World!'})
 
 @app.route("/register", methods=['POST'])
@@ -18,7 +19,7 @@ def register():
 	except IntegrityError,e:
 		models.db.session.rollback()
 		raise e
-	return usr.name
+	return usr.response()
 
 @app.route('/login',methods=['GET'])
 def login():
@@ -28,7 +29,7 @@ def login():
 		return "bad bad"
 	usr = models.User.auth(name,password)
 	if usr:
-		session['user'] = usr
+		session['user'] = usr.id
 		return "Logged in"
 	else:
 		return "Login Failed"
@@ -41,10 +42,10 @@ def logout():
 		pass
 	return "Logged out"
 
-@app.route('/test')
+@app.route('/user',methods=['GET'])
 def test():
 	try:
-		uname = session['user'].name
-		return uname
+		user = models.User.query.get(session['user'])
+		return user.response()
 	except KeyError,e:
 		return "Not Logged in"

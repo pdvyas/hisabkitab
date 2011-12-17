@@ -2,20 +2,23 @@ from flaskext.sqlalchemy import SQLAlchemy
 import datetime
 import flask
 import hashlib
+import json
 app = flask.Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
 db = SQLAlchemy(app)
 accounts = db.Table('accounts',
-		    db.Column('account_id', db.Integer, db.ForeignKey('account.id')),
-			    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+		    db.Column('account_id', db.String(32), db.ForeignKey('account.id')),
+			    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+				db.UniqueConstraint('account_id','user_id')
 				)
 
 class User(db.Model):
+	__table_args__=(db.UniqueConstraint('name','email'),)
 	#family_id = db.Column(db.Integer,db.ForeignKey('family.id'))
 	id = db.Column(db.Integer,primary_key=True)
-	name = db.Column(db.String(80),unique=True)
+	name = db.Column(db.String(80))
 	password = db.Column(db.String(32))
-	email = db.Column(db.String(80),unique=True)
+	email = db.Column(db.String(80))
 	accounts = db.relationship('Account',secondary=accounts,
 			backref=db.backref('users',lazy='dynamic'))
 
@@ -23,6 +26,11 @@ class User(db.Model):
 		self.name = name
 		self.email = email
 		self.password = hashlib.md5(password).hexdigest()
+	
+	@staticmethod
+	def get_by_id(uid):
+		usr = User.query.filter_by(id=uid).first()
+		return usr
 	
 	@staticmethod
 	def auth(name,password):
@@ -36,7 +44,13 @@ class User(db.Model):
 			return True
 		else:
 			return False
-
+	
+	def response(self):
+		ret = {}
+		ret['id'] =	self.id
+		ret['name'] = self.name
+		return json.dumps(ret)
+	
 class Family(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
 	name = db.Column(db.String(80))
@@ -58,13 +72,14 @@ class Transaction(db.Model):
 	t_type = db.Column(db.String(1))
 	bal = db.Column(db.Float)
 
-	def __init__(self,id,ref_no,narration,date,amount,t_type):
+	def __init__(self,id,ref_no,narration,date,amount,t_type,bal):
 		self.id = id
 		self.ref_no = ref_no
 		self.narration = narration
 		self.date = date
 		self.amount = amount
 		self.t_type = t_type
+		self.bal = bal
 
 class Account(db.Model):
 	id = db.Column(db.String, primary_key=True)
@@ -72,45 +87,19 @@ class Account(db.Model):
 	bank = db.Column(db.String)
 	bal = db.Column(db.Float)
 	_last_txn = db.Column(db.String(32))
+	_last_date = db.Column(db.DateTime())
 	transactions = db.relationship('Transaction',
 			backref=db.backref('Transaction'),primaryjoin=id==Transaction.ac_id)
 	def __init__(self,ac_no,bank,id,balance):
 		self.id = id
 		self.bal = balance
-		self.no = no
+		self.no = ac_no
 		self.bank = bank
 
 	@staticmethod
 	def get_by_id(ac_id):
 		return Account.query.get(ac_id)
 
-def test():
-	db.drop_all()
-	db.create_all()
-	#family = Family('vyas')
-	usr1 = User('pratik','pdvyas@gmail.com','secret')
-	usr2= User('Neelima','neelu@gmail.com','secret2')
-	#family.users.append(usr1)
-	#family.users.append(usr2)
-	ac1 = Account(810)
-	ac2 = Account(940)
-	usr1.accounts.append(ac2)
-	usr2.accounts.append(ac1)
-	usr2.accounts.append(ac2)
-	t1 = Transaction('a','23','test',datetime.date(2011,11,23),100,'c')
-	t2 = Transaction('b','232','tes2t',datetime.date(2010,11,23),200,'c')
-	t3 = Transaction('c','2232','tes2t',datetime.date(2010,11,23),300,'d')
-	ac1.transactions.append(t1)
-	ac1.transactions.append(t2)
-	ac2.transactions.append(t3)
-	db.session.add(usr1)
-	db.session.add(usr2)
-	db.session.add(ac1)
-	db.session.add(ac2)
-	db.session.commit()
-	print User.auth('pratik','secret').name
-	print User.auth('pratik','asdf')
-
-if __name__ == "__main__":
-	test()
-
+	def response(self):
+		ret = { i : self.__getattribute__(i) for i in ['id','no','bank','bal']}
+		return json.dumps(ret)
