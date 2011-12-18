@@ -21,7 +21,7 @@ def register():
 		raise e
 	return usr.response()
 
-@app.route('/login',methods=['GET'])
+@app.route('/login',methods=['POST'])
 def login():
 	name = request.args.get('name')
 	password = request.args.get('password')
