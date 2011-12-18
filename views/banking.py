@@ -1,5 +1,5 @@
 from app import app
-from flask import request,jsonify,session
+from flask import request,jsonify,session,g
 import json
 import datetime
 import models
@@ -7,14 +7,14 @@ from bank import *
 
 @app.route("/account",methods=['GET'])
 def get_acs():
-	user = models.User.query.get(session['user'])
+	user = g.user
 	accounts = user.accounts
 	accounts = [ac.response(as_dict=True) for ac in accounts]
 	return json.dumps(accounts)
 
 @app.route("/account/<acid>",methods=['GET'])
 def get_ac(acid):
-	user = models.User.query.get(session['user'])
+	user = g.user
 	account = models.Account.get_by_id(acid)
 	if account in user.accounts:
 		return account.response()
@@ -34,7 +34,7 @@ def get_ext_acs():
 @app.route("/account/auth",methods=['POST'])
 def auth_ac():
 	ac_id = request.form['ac_id']
-	user = models.User.get_by_id(session['user'])
+	user = g.user
 	account = models.Account.get_by_id(ac_id)
 	if not account:
 		ac = session['LOA'][ac_id]
