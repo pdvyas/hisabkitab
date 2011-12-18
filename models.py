@@ -100,6 +100,9 @@ class Account(db.Model):
 	def get_by_id(ac_id):
 		return Account.query.get(ac_id)
 
-	def response(self):
-		ret = { i : self.__getattribute__(i) for i in ['id','no','bank','bal']}
+	def response(self,as_dict=False):
+		ret = { i : self.__getattribute__(i) for i in
+				['id','no','bank','bal']}
+		if as_dict:
+			return ret
 		return json.dumps(ret)

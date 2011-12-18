@@ -5,8 +5,24 @@ import datetime
 import models
 from bank import *
 
-@app.route("/ext/account",methods=['POST'])
+@app.route("/account",methods=['GET'])
 def get_acs():
+	user = models.User.query.get(session['user'])
+	accounts = user.accounts
+	accounts = [ac.response(as_dict=True) for ac in accounts]
+	return json.dumps(accounts)
+
+@app.route("/account/<acid>",methods=['GET'])
+def get_ac(acid):
+	user = models.User.query.get(session['user'])
+	account = models.Account.get_by_id(acid)
+	if account in user.accounts:
+		return account.response()
+	else:
+		return "account not found"
+
+@app.route("/ext/account",methods=['POST'])
+def get_ext_acs():
 	bankname = request.form['bank']
 	username = request.form['username']
 	password = request.form['password']
