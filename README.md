@@ -35,4 +35,4 @@ Currently the project is in its infancy. Below is a list of work done:
 * HTTP API (not purely RESTful) to sync Bank transactions 
 * HTTP API to retrieve synced transactions
 
-API description can be found in api.md
+API description can be found in api.txt
