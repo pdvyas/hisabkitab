@@ -23,8 +23,8 @@ def register():
 
 @app.route('/login',methods=['POST'])
 def login():
-	name = request.args.get('name')
-	password = request.args.get('password')
+	name = request.form['name']
+	password = request.form['password']
 	if not (name and password):
 		return "bad bad"
 	usr = models.User.auth(name,password)

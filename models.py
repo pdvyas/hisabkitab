@@ -80,6 +80,18 @@ class Transaction(db.Model):
 		self.amount = amount
 		self.t_type = t_type
 		self.bal = bal
+	
+	def response(self,as_dict=False):
+		ret = { i : self.__getattribute__(i) for i in
+				['id','ref_no','narration','date','amount','t_type','bal','ac_id']}
+		ret['date']=ret['date'].isoformat()
+		if as_dict:
+			return ret
+		return json.dumps(ret)
+
+	@staticmethod
+	def get_by_id(t_id):
+		return Transaction.query.get(t_id)
 
 class Account(db.Model):
 	id = db.Column(db.String, primary_key=True)

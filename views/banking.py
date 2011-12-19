@@ -52,3 +52,22 @@ def sync_ac():
 	password = request.form['password']
 	sync_account(ac_id,username,password)
 	return "Success"
+
+@app.route("/account/<acid>/transaction")
+def get_txns(acid):
+	txns = []
+	user = g.user
+	account = models.Account.get_by_id(acid)
+	if account in user.accounts:
+		txns = account.transactions
+		txns = [txn.response(as_dict=True) for txn in txns]
+	return json.dumps(txns)
+
+@app.route("/account/<acid>/transaction/<tid>")
+def get_txn(acid,tid):
+	user = g.user
+	txn = models.Transaction.get_by_id(tid)
+	account = models.Account.get_by_id(txn.ac_id)
+	if account in user.accounts:
+		return txn.response()
+	return ""
