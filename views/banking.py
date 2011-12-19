@@ -63,8 +63,8 @@ def get_txns(acid):
 		txns = [txn.response(as_dict=True) for txn in txns]
 	return json.dumps(txns)
 
-@app.route("/account/<acid>/transaction/<tid>")
-def get_txn(acid,tid):
+@app.route("/transaction/<tid>")
+def get_txn(tid):
 	user = g.user
 	txn = models.Transaction.get_by_id(tid)
 	account = models.Account.get_by_id(txn.ac_id)

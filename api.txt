@@ -1,0 +1,72 @@
+GET /
+-----
+
+renders page for browser
+
+POST /register
+--------------
+
+data = {
+	name : <username>
+	password : <password>
+	email : <email>
+	}
+
+Register a new user for the app
+
+POST /login
+-----------
+
+data = {
+	name : <username>
+	password : <password>
+	}
+
+Login into the App
+
+GET /user
+--------
+
+Get info about the current user.
+
+GET /logout
+----------
+
+Logout the current user
+
+POST /ext/account
+-----------------
+
+data = {
+	bank : <bankname>
+	username : <bankusername>
+	password : <bankpassword>
+	}
+
+Login to the bank and get list of all your accounts
+
+POST /account/auth
+------------------
+
+data = {
+	ac_id : <account_id>
+	}
+
+Authorize use of an account of yours by the app.
+You need to make a request for /ext/account first and get ac_id
+from its response
+
+GET /account/<acid>
+-------------------
+
+Get account by acid (account id)
+
+GET /account/<acid>/transaction
+-------------------------------
+
+Get all transactions from account with id - acid
+
+GET /transaction/<tid>
+-------------------------------------
+
+Get Transaction by id
