@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="static/css/bootstrap.css"></link>
+		<style>
+			body {
+				padding-top : 40px
+			}
+			div.centered{
+				margin : auto,
+				top : 50%
+			}
+
+			</style>
+		<script type="text/javascript" src={{ url_for('static',filename='js/jquery-1.7.1.js') }}></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/jquery-require.js') }}"></script>
+		<script type="text/javascript" src="static/js/json2.js"></script>
+		<script type="text/javascript" src="static/js/user.js"></script>
+		<script type="text/javascript" src="static/js/ui.js"></script>
+		<script type="text/javascript" src="static/js/app.js"></script>
+	</head>
+	<body>
+
+		<div class="topbar">
+			<div class="fill">
+				<div class="container">
+					<ul>
+						<li class="brand">hisab<strong>kitab</strong></li>
+					</ul>
+					<p class="pull-right"><a id="logout" href="#"></a></p>
+				</div>
+			</div>
+		</div>
+
+		<div id="main">
+		</div>
+
+	</body>
+</html>
+

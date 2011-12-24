@@ -1,11 +1,11 @@
 from app import app
-from flask import request,jsonify,session
+from flask import request,jsonify,session,render_template
 from sqlalchemy.exc import IntegrityError
 import models
+import json
 @app.route("/")
 def hello():
-	raise Exception
-	return jsonify({ 'a': 'Hello World!'})
+	return render_template('index.html')
 
 @app.route("/register", methods=['POST'])
 def register():
@@ -30,7 +30,7 @@ def login():
 	usr = models.User.auth(name,password)
 	if usr:
 		session['user'] = usr.id
-		return "Logged in"
+		return usr.response()
 	else:
 		return "Login Failed"
 
@@ -48,4 +48,4 @@ def test():
 		user = models.User.query.get(session['user'])
 		return user.response()
 	except KeyError,e:
-		return "Not Logged in"
+		return json.dumps({'name':''})
