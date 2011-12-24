@@ -27,7 +27,8 @@ $.ui = {
 
 	make_main_page: function() {
 		put_logout();
-		$('#main').empty();
+		$('#main').empty().
+			append(make_tabs(['Expenses','Fixed Deposits','Mutual Funds','Stocks']));
 	}
 }
 
@@ -36,4 +37,49 @@ var put_logout = function() {
 		on('click',function() {
 			$.user.logout();	
 	});
+}
+
+// Takes an array of tab names and returns a div that implements bootstrap tabs
+// Usage : make_tabs(['One','Two','Three']);
+// makes 3 tabs One, Two and Three and their content divs are accessible with selectors,
+// #one,#two,#three
+
+var make_tabs = function(tabs) {
+	apptabs = $(document.createElement('div'));
+	tab_list = $(document.createElement('ul'));
+	tab_list.addClass('tabs');
+	tab_list.attr('data-tabs','tabs');
+	tab_contents = $(document.createElement('div'));
+	tab_contents.addClass("tab-content");
+	$.each(tabs,function(i,tab) {
+
+		//tablist part
+
+		var tabid = munch_name(tab)
+		var ele = $(document.createElement('li'));
+		var link = $(document.createElement('a'));
+		link.attr('href', '#' + tabid);
+		link.append(tab);
+		ele.append(link);
+		tab_list.append(ele);
+
+		//tab content part
+		
+		var content = $(document.createElement('div'));
+		content.attr('id', tabid);
+		content.addClass("tab-pane");
+		tab_contents.append(content);
+
+	});
+	apptabs.addClass('container');
+	apptabs.append(tab_list);
+	apptabs.append(tab_contents);
+	apptabs.css('padding-top','10px');
+	return apptabs;
+}
+
+var munch_name = function(name) {
+	name = name.toLowerCase().
+		replace(' ','_');
+	return name;
 }
