@@ -35,7 +35,6 @@ var get_accounts = function() {
 			$.hisab.bank.accounts = TAFFY(d);
 			var acids = $.hisab.bank.accounts().select('id');
 			$(document).trigger('got_accounts',acids);
-			trig();
 		}
 	});
 }
