@@ -28,7 +28,7 @@ $.ui = {
 	make_main_page: function() {
 		put_logout();
 		$('#main').empty().
-			append(make_tabs(['Expenses','Fixed Deposits','Mutual Funds','Stocks']));
+			append(make_tabs(['bank','Fixed Deposits','Mutual Funds','Stocks']));
 	}
 }
 
