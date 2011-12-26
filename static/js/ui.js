@@ -43,6 +43,7 @@ var put_logout = function() {
 // Usage : make_tabs(['One','Two','Three']);
 // makes 3 tabs One, Two and Three and their content divs are accessible with selectors,
 // #one,#two,#three
+// The first tab is active by default
 
 var make_tabs = function(tabs) {
 	apptabs = $(document.createElement('div'));
@@ -61,6 +62,9 @@ var make_tabs = function(tabs) {
 		link.attr('href', '#' + tabid);
 		link.append(tab);
 		ele.append(link);
+		if(i==0) {
+			ele.addClass('active');
+		}
 		tab_list.append(ele);
 
 		//tab content part
@@ -68,6 +72,9 @@ var make_tabs = function(tabs) {
 		var content = $(document.createElement('div'));
 		content.attr('id', tabid);
 		content.addClass("tab-pane");
+		if(i==0) {
+			content.addClass('active');
+		}
 		tab_contents.append(content);
 
 	});
