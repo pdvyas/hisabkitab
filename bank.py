@@ -61,7 +61,7 @@ def get_statement(bankname,ac_id,ac_no,username,password,to_date,from_date):
 		return txns
 	except Exception,e:
 		bank.logout()
-		raise e
+		raise
 
 def get_txn_obj(txn):
 	"""

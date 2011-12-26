@@ -71,12 +71,12 @@ class Transaction(db.Model):
 	amount = db.Column(db.Float(80))
 	t_type = db.Column(db.String(1))
 	bal = db.Column(db.Float)
-	ttype = db.Column(db.String(10))
+	method = db.Column(db.String(10))
 	card = db.Column(db.String(80))
 	place = db.Column(db.String(80))
-	merchant = db.Column(db.String(80))
+	party = db.Column(db.String(80))
 
-	def __init__(self,id,ref_no,narration,date,amount,t_type,bal,ttype,card,place,merchant):
+	def __init__(self,id,ref_no,narration,date,amount,t_type,bal,method,card,place,party):
 		self.id = id
 		self.ref_no = ref_no
 		self.narration = narration
@@ -87,11 +87,11 @@ class Transaction(db.Model):
 		self.method = method
 		self.card = card
 		self.place = place
-		self.merchant = merchant
+		self.party = party
 	
 	def response(self,as_dict=False):
 		ret = { i : self.__getattribute__(i) for i in
-				['id','ref_no','narration','date','amount','t_type','bal','ac_id','place','merchant','card','method']}
+				['id','ref_no','narration','date','amount','t_type','bal','ac_id','place','party','card','method']}
 		ret['date']=ret['date'].isoformat()
 		if as_dict:
 			return ret
