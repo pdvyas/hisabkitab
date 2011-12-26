@@ -82,16 +82,16 @@ class Transaction(db.Model):
 		self.narration = narration
 		self.date = date
 		self.amount = amount
-		self.t_type = t_type
+		self.method = method
 		self.bal = bal
-		self.ttype = ttype
+		self.method = method
 		self.card = card
 		self.place = place
 		self.merchant = merchant
 	
 	def response(self,as_dict=False):
 		ret = { i : self.__getattribute__(i) for i in
-				['id','ref_no','narration','date','amount','t_type','bal','ac_id','place','merchant','card','ttype']}
+				['id','ref_no','narration','date','amount','t_type','bal','ac_id','place','merchant','card','method']}
 		ret['date']=ret['date'].isoformat()
 		if as_dict:
 			return ret
