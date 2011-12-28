@@ -3,9 +3,11 @@ $(document).bind('got_accounts',function(e,acids) {
 		acids = Array(acids);
 	}
 	$.hisab.bank.acids = acids;
-	$.hisab.bank.got_txns = [];
+	$.hisab.bank.got_txns = $.hisab.bank.got_txns || [];
 	$.each(acids,function(i,acid) {
-		get_transactions(acid);
+		if(!(acid in $.hisab.bank.got_txns)) {
+			get_transactions(acid);
+		}
 	});
 });
 
@@ -13,6 +15,7 @@ $(document).bind('got_txns',function(e,acid) {
 	$.hisab.bank.got_txns.push(acid);
 	if($.hisab.bank.got_txns.length == $.hisab.bank.acids.length) {
 		$.hisab.bank.loaded = true;
+		$('#bank').trigger('loaded');
 	}
 });
 
@@ -40,18 +43,20 @@ var get_accounts = function() {
 }
 
 var get_transactions = function(acid) {
-	$.ajax({
-		'type' : 'GET',
-		'url' : '/account/'+acid+'/transaction',
-		'success' : function(data,textStatus,jqXHR) {
-			var d = JSON.parse(data);
-			if($.hisab.bank.transactions) {
-				$.hisab.bank.transactions().insert(d);
+	if(!(acid in $.hisab.bank.got_txns)) {
+		$.ajax({
+			'type' : 'GET',
+			'url' : '/account/'+acid+'/transaction',
+			'success' : function(data,textStatus,jqXHR) {
+				var d = JSON.parse(data);
+				if($.hisab.bank.transactions) {
+					$.hisab.bank.transactions.insert(d);
+				}
+				else {
+					$.hisab.bank.transactions = TAFFY(d);
+				}
+				$(document).trigger('got_txns',acid);
 			}
-			else {
-				$.hisab.bank.transactions = TAFFY(d);
-			}
-			$(document).trigger('got_txns',acid);
-		}
-	});	
+		});	
+	}
 }

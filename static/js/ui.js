@@ -28,7 +28,9 @@ $.ui = {
 	make_main_page: function() {
 		put_logout();
 		$('#main').empty().
-			append(make_tabs(['bank','Fixed Deposits','Mutual Funds','Stocks']));
+			append(make_tabs(['Bank','Fixed Deposits','Mutual Funds','Stocks']));
+		load_tab_events();
+		$.hisab.bank.init();
 	}
 }
 
@@ -89,4 +91,18 @@ var munch_name = function(name) {
 	name = name.toLowerCase().
 		replace(' ','_');
 	return name;
+}
+
+var load_tab_events = function() {
+		$('#bank').bind('loaded',function() {
+			var a = $.hisab.bank.transactions().get()
+			var tab = mk_table(a)
+			$('#bank').append(tab)
+			$('table').dataTable({
+				'aoColumnDefs' :[ { "bSearchable": false, "bVisible": false, "aTargets": [ 0 ] }],
+				"sDom": "<'row'<'span8'l><'span8'f>r>t<'row'<'span8'i><'span8'p>>",
+				"sPaginationType": "bootstrap",
+				"aaSorting" : [[1,'asc']]
+				})
+		});
 }

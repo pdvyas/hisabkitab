@@ -84,7 +84,7 @@ class Transaction(db.Model):
 		self.amount = amount
 		self.method = method
 		self.bal = bal
-		self.method = method
+		self.t_type = t_type
 		self.card = card
 		self.place = place
 		self.party = party

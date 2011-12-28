@@ -6,18 +6,46 @@
 			body {
 				padding-top : 40px
 			}
-			div.centered{
-				margin : auto,
-				top : 50%
+			div.dataTables_length label {
+				width: 460px;
+				float: left;
+				text-align: left;
 			}
 
-			</style>
+			div.dataTables_length select {
+				width: 75px;
+			}
+
+			div.dataTables_filter label {
+				float: right;
+				width: 460px;
+			}
+
+			div.dataTables_info {
+				padding-top: 8px;
+			}
+
+			div.dataTables_paginate {
+				float: right;
+				margin: 0;
+			}
+
+			table {
+				margin: 1em 0;
+				clear: both;
+			}
+
+		</style>
 		<script type="text/javascript" src={{ url_for('static',filename='js/jquery-1.7.1.js') }}></script>
 		<script type="text/javascript" src="{{ url_for('static',filename='js/jquery-require.js') }}"></script>
 		<script type="text/javascript" src="static/js/json2.js"></script>
+		<script type="text/javascript" src="static/js/jquery.dataTables.js"></script>
 		<script type="text/javascript" src="static/js/taffy.js"></script>
+		<script type="text/javascript" src="static/js/datatables.bootstrap.js"></script>
 		<script type="text/javascript" src="static/js/bootstrap/bootstrap-tabs.js"></script>
 		<script type="text/javascript" src="static/js/ui.js"></script>
+		<script type="text/javascript" src="static/js/bank.js"></script>
+		<script type="text/javascript" src="static/js/ui/bank_table.js"></script>
 		<script type="text/javascript" src="static/js/app.js"></script>
 	</head>
 	<body>
