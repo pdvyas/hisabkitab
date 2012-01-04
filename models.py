@@ -12,6 +12,26 @@ accounts = db.Table('accounts',
 				db.UniqueConstraint('account_id','user_id')
 				)
 
+class TransactionPattern(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	cat_id = db.Column(db.Integer,db.ForeignKey('category.id'))
+	method = db.Column(db.String(80))
+	pattern = db.Column(db.String(80))
+
+	def __init__(self,method,pattern):
+		self.method = method
+		self.pattern = pattern
+
+class Category(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	name = db.Column(db.String(80),unique=True)
+	patterns =
+	db.relationship('TransactionPattern',backref=db.backref('Category'),
+			primaryjoin=id==TransactionPattern.cat_id)
+
+	def __init__(self,name):
+		self.name = name
+
 class User(db.Model):
 	__table_args__=(db.UniqueConstraint('name','email'),)
 	#family_id = db.Column(db.Integer,db.ForeignKey('family.id'))
@@ -109,7 +129,7 @@ class Account(db.Model):
 	_last_txn = db.Column(db.String(32))
 	_last_date = db.Column(db.DateTime())
 	transactions = db.relationship('Transaction',
-			backref=db.backref('Transaction'),primaryjoin=id==Transaction.ac_id)
+			backref=db.backref('Account'),primaryjoin=id==Transaction.ac_id)
 	def __init__(self,ac_no,bank,id,balance):
 		self.id = id
 		self.bal = balance
