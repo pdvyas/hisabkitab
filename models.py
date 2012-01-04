@@ -94,6 +94,8 @@ class Transaction(db.Model):
 	card = db.Column(db.String(80))
 	place = db.Column(db.String(80))
 	party = db.Column(db.String(80))
+	cat_id = db.Column(db.ForeignKey('category.id'))
+	category = db.relationship('Category',primaryjoin=cat_id==Category.id)
 
 	def __init__(self,id,ref_no,narration,date,amount,t_type,bal,method,card,place,party):
 		self.id = id
