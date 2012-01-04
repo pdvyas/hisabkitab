@@ -25,8 +25,7 @@ class TransactionPattern(db.Model):
 class Category(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
 	name = db.Column(db.String(80),unique=True)
-	patterns =
-	db.relationship('TransactionPattern',backref=db.backref('Category'),
+	patterns = db.relationship('TransactionPattern',backref=db.backref('Category'),
 			primaryjoin=id==TransactionPattern.cat_id)
 
 	def __init__(self,name):
