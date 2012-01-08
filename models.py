@@ -97,7 +97,7 @@ class Transaction(db.Model):
 	cat_id = db.Column(db.ForeignKey('category.id'))
 	category = db.relationship('Category',primaryjoin=cat_id==Category.id)
 
-	def __init__(self,id,ref_no,narration,date,amount,t_type,bal,method,card,place,party):
+	def	__init__(self,id,ref_no,narration,date,amount,t_type,bal,method,card,place,party,category=None):
 		self.id = id
 		self.ref_no = ref_no
 		self.narration = narration
@@ -109,10 +109,16 @@ class Transaction(db.Model):
 		self.card = card
 		self.place = place
 		self.party = party
+		self.category = category
+
+	def set_cat(self, category):
+		self.category = category
 	
 	def response(self,as_dict=False):
 		ret = { i : self.__getattribute__(i) for i in
 				['id','ref_no','narration','date','amount','t_type','bal','ac_id','place','party','card','method']}
+		if self.category:
+			ret['category'] = self.category.name
 		ret['date']=ret['date'].isoformat()
 		if as_dict:
 			return ret
