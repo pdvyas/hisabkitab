@@ -1,13 +1,40 @@
-
-tab_order = ['id','date','method','card','narration','amount']
-tab_names = {
-	'id' : 'id',
-	'date' : 'Date',
-	'method' : 'Method',
-	'narration' : 'Narration',
-	'card' : 'Card',
-	'amount' : 'Amount'
-}
+txn_tab = [
+	{
+		'name':'id',
+		'idx' : 'id',
+	},
+	{
+		'name':'Date',
+		'idx':'date'	
+	},
+	{
+		'name':'Method',
+		'idx' : 'method'
+	},
+	{
+		'name' : 'Card',
+		'idx' : 'card'
+	},
+	{
+		'name' : 'Narration',
+		'idx' : 'narration'
+	},
+	{
+		'name' : 'Amount',
+		'idx' : 'amount'
+	},
+	{
+		'name' : 'Type',
+		'idx' : 't_type'
+	},
+	{
+		'name' : 'Category',
+		'idx' : 'category',
+		'options' : {
+			'class' : 'category'
+		}
+	}
+];
 
 make_table = function(data) {
 	var div = $(document.createElement('div'))
@@ -32,10 +59,8 @@ make_table = function(data) {
 sanit_data = function(data) {
 	var ret = []
 	$.each(data,function(i,txn) {
-		iret = {}
-		for(i in tab_names) {
-			iret[i] = txn[i]
-		}
+		iret = $.extend({},txn)
+
 		if (txn.party) {
 			iret['narration'] = txn['party']	
 		}
@@ -44,28 +69,40 @@ sanit_data = function(data) {
 	return ret;
 }
 
-mk_table = function(data) {
-	var cols = tab_order;
-	data = sanit_data(data);
-	var arr = make_arr(data);
+var get_tab_cols = function(tab) {
+	var ret = [];
+	$.each(tab,function(i,col) {
+		ret.push(col.name);
+	});
+	return ret;
+}
+
+mk_table = function(data,tab) {
+	tab = txn_tab
+	var cols = get_tab_cols(tab);
+	data = sanit_data(data)
 	var table = $(document.createElement('table'));
 	var thead = $(document.createElement('thead'));
 	var tbody = $(document.createElement('tbody'));
 	var tr = $(document.createElement('tr'));
 	$.each(cols,function(i,col) {
 		var th = $(document.createElement('th'));
-		th.append(tab_names[col]);
+		th.append(col);
 		tr.append(th);
 	});
 	thead.append(tr);
 
-	$.each(arr,function(i,iarr) {
+	$.each(data,function(i,txn) {
 		var tr = $(document.createElement('tr'));
-		for (j in iarr) {
+		$.each(tab,function(j,col) {
 			var td = $(document.createElement('td'));
-			td.append(iarr[j]);
+			td.append(txn[col.idx]);
+			if(col.options) {
+				td.addClass(col.options.class)
+			}
 			tr.append(td);
-		}
+		});
+
 		tbody.append(tr);
 	});
 	table.append(thead).append(tbody);

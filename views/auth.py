@@ -7,6 +7,11 @@ import json
 def hello():
 	return render_template('index.html')
 
+
+@app.route("/test")
+def testhello():
+	return render_template('test.html')
+
 @app.route("/register", methods=['POST'])
 def register():
 	name = request.form['name']

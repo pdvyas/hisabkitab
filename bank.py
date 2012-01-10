@@ -1,6 +1,7 @@
-from flask import session
+from flask import session,g
 import models
 import datetime
+from pprint import pprint
 
 def get_accounts(bankname,username,password):
 	bank = __import__('banks.'+bankname,globals={}, locals={},
@@ -33,6 +34,7 @@ def sync_account(ac_id,username,password):
 	txns = get_statement(bankname,ac_id,ac_no,username,password,to_date,from_date)
 	txns = slice_txns(txns,t_id)
 	txns = [get_txn_obj(txn) for txn in txns]
+	txns = [process_txn(txn) for txn in txns]
 
 	ac.transactions.extend(txns)
 	if len(txns)>0:
@@ -83,3 +85,14 @@ def slice_txns(txns,t_id):
 			break
 		txn_list.append(txn)
 	return txn_list
+
+def process_txn(txn):
+	ac_nos = g.user.get_account_nos()
+	if txn.method == 'XFER':
+		if txn.t_type == 'c' and txn.party in ac_nos:
+			txn.t_type = 'x'
+
+		if txn.t_type == 'd' and txn.party in ac_nos:
+			txn.t_type = 'x'
+	pprint(txn.response())
+	return txn

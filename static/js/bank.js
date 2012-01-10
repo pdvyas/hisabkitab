@@ -1,4 +1,5 @@
 $(document).bind('got_accounts',function(e,acids) {
+	acids = JSON.parse(acids)
 	if($.type(acids)==="string") {
 		acids = Array(acids);
 	}
@@ -37,7 +38,7 @@ var get_accounts = function() {
 			var d = JSON.parse(data);
 			$.hisab.bank.accounts = TAFFY(d);
 			var acids = $.hisab.bank.accounts().select('id');
-			$(document).trigger('got_accounts',acids);
+			$(document).trigger('got_accounts',JSON.stringify(acids));
 		}
 	});
 }

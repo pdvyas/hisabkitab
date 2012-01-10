@@ -45,6 +45,10 @@ class User(db.Model):
 		self.name = name
 		self.email = email
 		self.password = hashlib.md5(password).hexdigest()
+
+	def get_account_nos(self):
+		ac_nos = [ac.no for ac in self.accounts]
+		return ac_nos
 	
 	@staticmethod
 	def get_by_id(uid):

@@ -39,7 +39,7 @@ def auth_ac():
 	if not account:
 		ac = session['LOA'][ac_id]
 		account = models.Account (**ac)
-	del session['LOA']
+	del session['LOA'][ac_id]
 	user.accounts.append(account)
 	models.db.session.add(user)
 	models.db.session.commit()
@@ -70,4 +70,21 @@ def get_txn(tid):
 	account = models.Account.get_by_id(txn.ac_id)
 	if account in user.accounts:
 		return txn.response()
+	return ""
+
+@app.route('/cat',methods=['GET'])
+def get_cats():
+	#print request.args
+	a = [11112,2,3,4,5,6]
+	a = [ { "id": "Dromas ardeola", "label": "Crab-Plover", "value":
+		"Crab-Plover" }, { "id": "Larus sabini", "label": "Sabine`s Gull",
+				"value": "Sabine`s Gull" }, { "id": "Vanellus gregarius",
+						"label": "Sociable Lapwing", "value": "Sociable	Lapwing" }, 
+				{ "id": "Oenanthe isabellina", "label":	"Isabelline Wheatear", "value": "Isabelline Wheatear" }
+				]
+	return json.dumps(a)
+
+@app.route('/cat',methods=['POST'])
+def put_cat():
+	print request.form
 	return ""

@@ -96,13 +96,35 @@ var munch_name = function(name) {
 var load_tab_events = function() {
 		$('#bank').bind('loaded',function() {
 			var a = $.hisab.bank.transactions().get()
-			var tab = mk_table(a)
+			var tab = mk_table(a,tab)
 			$('#bank').append(tab)
-			$('table').dataTable({
+			var oTable = $('table').dataTable({
 				'aoColumnDefs' :[ { "bSearchable": false, "bVisible": false, "aTargets": [ 0 ] }],
 				"sDom": "<'row'<'span8'l><'span8'f>r>t<'row'<'span8'i><'span8'p>>",
 				"sPaginationType": "bootstrap",
 				"aaSorting" : [[1,'asc']]
-				})
+				});
+
+			$('.category').editable( '/cat', {
+				"callback": function( sValue, y ) {
+					var aPos = oTable.fnGetPosition( this );
+					oTable.fnUpdate( sValue, aPos[0], aPos[1] );
+				},
+				"submitdata": function ( value, settings ) {
+					return {
+						"row_id": this.parentNode.getAttribute('id'),
+						"column": oTable.fnGetPosition( this )[2]
+					};
+				},
+				"height": "14px"
+			} );
 		});
+
+		$(".category").delegate(".ui-autocomplete-input", "focus", function (event) {
+			$(this).autocomplete({
+				source: '/cat',
+				minLength: 1
+			});
+});
+
 }
